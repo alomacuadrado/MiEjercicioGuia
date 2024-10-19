@@ -30,7 +30,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9060);
+            IPEndPoint ipep = new IPEndPoint(direc, 9022);
             
 
             //Creamos el socket 
@@ -63,7 +63,7 @@ namespace WindowsFormsApplication1
                 //Recibimos la respuesta del servidor
                 byte[] msg2 = new byte[80];
                 server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split ('\0')[0];
+                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
                 MessageBox.Show("La longitud de tu nombre es: " + mensaje);
             }
             else if (Bonito.Checked)
@@ -85,6 +85,39 @@ namespace WindowsFormsApplication1
                     MessageBox.Show("Tu nombre NO bonito. Lo siento.");
 
             }
+
+            else if (Mayusculas.Checked)
+            {
+                // convertir el nombre a mayúsculas
+                string mensaje = "4/" + nombre.Text;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+
+                // Recibimos la respuesta del servidor
+                byte[] msg2 = new byte[80];
+                server.Receive(msg2);
+                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                MessageBox.Show("Tu nombre en mayúsculas es: " + mensaje);
+            }
+
+            else if (palindromo.Checked)
+            {
+                // Comprobar si el nombre es un palíndromo
+                string mensaje = "5/" + nombre.Text; // 5 es el código para palíndromo
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+
+                // Recibimos la respuesta del servidor
+                byte[] msg2 = new byte[80];
+                server.Receive(msg2);
+                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                if (mensaje == "SI")
+                    MessageBox.Show("Tu nombre es un palíndromo.");
+                else
+                    MessageBox.Show("Tu nombre NO es un palíndromo.");
+            }
+
+
             else
             {
                 // Enviamos nombre y altura
@@ -99,8 +132,9 @@ namespace WindowsFormsApplication1
                 mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
                 MessageBox.Show(mensaje);
             }
-             
-        
+
+
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -121,8 +155,8 @@ namespace WindowsFormsApplication1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //Pedir numero de servicios realizados
-            string mensaje = "4/";
+            //pedir num de servicio
+            string mensaje = "6/";
 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
@@ -131,9 +165,13 @@ namespace WindowsFormsApplication1
             byte[] msg2 = new byte[80];
             server.Receive(msg2);
             mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            contLbl.Text= mensaje;
+            contlbl.Text = mensaje ;
+
         }
 
-     
-    }
+		private void palindromo_CheckedChanged(object sender, EventArgs e)
+		{
+
+		}
+	}
 }
